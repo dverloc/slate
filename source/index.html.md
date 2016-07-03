@@ -1,20 +1,17 @@
 ---
 title: API Reference
-
 language_tabs:
   - shell
   - ruby
   - python
   - javascript
-  
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
-
+  - '<a href=''#''>Sign Up for a Developer Key</a>'
+  - '<a href=''https://github.com/tripit/slate''>Documentation Powered by Slate</a>'
 includes:
   - errors
-
 search: true
+published: true
 ---
 
 # Introduction
@@ -65,9 +62,9 @@ Kittn expects for the API key to be included in all API requests to the server i
 You must replace <code>meowmeowmeow</code> with your personal API key.
 </aside>
 
-# Kittens
+# Calls
 
-## Get All Kittens
+## Create Resource
 
 ```ruby
 require 'kittn'
@@ -100,18 +97,12 @@ let kittens = api.kittens.get();
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+     "trusona_id": "123456789",
+     "action": "logi n",
+     "resource": "Bank of XYZ",
+     "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+     "level": 1,
+     "callback_url": "https://api .bankxyz.com/ auth/trusona/callback"
   }
 ]
 ```
@@ -120,14 +111,18 @@ This endpoint retrieves all kittens.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST https://api.trusona.com/api/v1/verifications`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+trusona_id | false | If set to true, the result will also include cats.
+action | true | If set to false, the result will include kittens that have already been adopted.
+resource | | lorem ipsum
+agent_id | | lorem ipsum
+level | | lorem ipsum
+callback_url | | lorem ipsum
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
@@ -186,4 +181,4 @@ This endpoint retrieves a specific kitten.
 Parameter | Description
 --------- | -----------
 ID | The ID of the kitten to retrieve
-
+ 
