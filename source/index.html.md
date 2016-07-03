@@ -6,7 +6,7 @@ language_tabs:
   - ruby
   - python
   - javascript
-
+  
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
@@ -19,20 +19,20 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Trusona API! You can use our API to access Trusona API endpoints, which can get information on various stuffs.
+
+The Trusona API is organized around REST. Our API has predictable, resource-oriented URLs, and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
 
 We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
 
 # Authentication
 
 > To authorize, use this code:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```shell
+Content-Type: application/json
+x- date: Tue, 19 Jan 2016 17: 10:58 GMT
+authorization: {access_token}:Base64(HMAC- SHA256( HTTP_METHOD + \n + MD5(HTTP_BODY ) + \n + CONTENT_TYPE + \n + Dat e() + \n + RESOURCE_URI ))
 ```
 
 ```python
@@ -55,7 +55,7 @@ let api = kittn.authorize('meowmeowmeow');
 
 > Make sure to replace `meowmeowmeow` with your API key.
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+Trusona uses HMAC SHA-256 encruption to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
 
 Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
 
