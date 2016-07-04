@@ -128,6 +128,44 @@ callback_url | | lorem ipsum
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+     "trusona_id": "123456789",
+     "action": "logi n",
+     "resource": "Bank of XYZ",
+     "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+     "level": 1,
+     "callback_url": "https://api .bankxyz.com/ auth/trusona/callback"
+  }
+]
+```
+
+This endpoint <does this>.
+
+### HTTP Request
+
+`POST https://api.trusona.com/api/v1/verifications`
+
+### Query Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+trusona_id | false | If set to true, the result will also include cats.
+action | true | If set to false, the result will include kittens that have already been adopted.
+resource | | lorem ipsum
+agent_id | | lorem ipsum
+level | | lorem ipsum
+callback_url | | lorem ipsum
+
+### Response
+
+
+
+
+
 ## Get a Specific Kitten
 
 ```ruby
@@ -174,11 +212,10 @@ This endpoint retrieves a specific kitten.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET https://api.trusona.com/api/v1/verifications/verification_id`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
- 
+ID | The ID of the data to retrieve
