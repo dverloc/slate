@@ -162,47 +162,23 @@ callback_url | | lorem ipsum
 
 ### Response
 
-
-
-
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+A successful response (201) includes an array of strings in the following format:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+
+  "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0",
+  "trusona_id": "123456789",
+  "email": "robert.jordan@example.com",
+  "action": "login",
+  "resource": "Bank of XYZ",
+  "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+  "accepted_level": 1,
+  "status": "ACCEPTED",
+  "interval": 600,
+  "resul t_id": "079fb6a7-937c-4e18-8ceb-776a55d6b01e",
+  "created_date": "2016-01-19T17:10:58Z",
+  "updated_date": "2016-01-19T17: 10:58Z"
 }
 ```
 
