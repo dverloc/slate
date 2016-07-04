@@ -29,7 +29,13 @@ We have language bindings in Shell, Ruby, and Python! You can view code examples
 ```shell
 Content-Type: application/json
 x- date: Tue, 19 Jan 2016 17: 10:58 GMT
-authorization: {access_token}:Base64(HMAC- SHA256( HTTP_METHOD + \n + MD5(HTTP_BODY ) + \n + CONTENT_TYPE + \n + Dat e() + \n + RESOURCE_URI ))
+authorization: {access_token}:
+                Base64(HMAC- SHA256
+                      (HTTP_METHOD + \n + 
+                       MD5(HTTP_BODY) + \n + 
+                       CONTENT_TYPE + \n + 
+                       Date() + \n + 
+                       RESOURCE_URI))
 ```
 
 ```python
@@ -101,11 +107,24 @@ let kittens = api.kittens.get();
 ]
 ```
 
+### Query Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+trusona_id | false | If set to true, the result will also include cats.
+action | true | If set to false, the result will include kittens that have already been adopted.
+resource | | lorem ipsum
+agent_id | | lorem ipsum
+level | | lorem ipsum
+callback_url | | lorem ipsum
+
 This endpoint retrieves all kittens.
+
+## GET Resource
 
 ### HTTP Request
 
-`POST https://api.trusona.com/api/v1/verifications`
+`GET https://api.trusona.com/api/v1/verifications/verification_id`
 
 ### Query Parameters
 
@@ -121,38 +140,6 @@ callback_url | | lorem ipsum
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-     "trusona_id": "123456789",
-     "action": "logi n",
-     "resource": "Bank of XYZ",
-     "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
-     "level": 1,
-     "callback_url": "https://api .bankxyz.com/ auth/trusona/callback"
-  }
-]
-```
-
-This endpoint <does this>.
-
-### HTTP Request
-
-`POST https://api.trusona.com/api/v1/verifications`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-trusona_id | false | If set to true, the result will also include cats.
-action | true | If set to false, the result will include kittens that have already been adopted.
-resource | | lorem ipsum
-agent_id | | lorem ipsum
-level | | lorem ipsum
-callback_url | | lorem ipsum
 
 ### Response
 
@@ -182,10 +169,3 @@ This endpoint retrieves a specific kitten.
 
 ### HTTP Request
 
-`GET https://api.trusona.com/api/v1/verifications/verification_id`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the data to retrieve
