@@ -5,8 +5,8 @@ language_tabs:
   - ruby
   - javascript
 toc_footers:
-  - '<a href=''#''>Sign Up for a Developer Key</a>'
-  - '<a href=''https://github.com/tripit/slate''>Documentation Powered by Slate</a>'
+##  - '<a href=''#''>Sign Up for a Developer Key</a>'
+##  - '<a href=''https://github.com/tripit/slate''>Documentation Powered by Slate</a>'
 includes:
   - errors
 search: true
@@ -102,7 +102,7 @@ const placeholder = require('placeholder');
 let api = placeholder.authorize('placeholder');
 ```
 
-> Make sure to replace `placeholder` with your API key.
+> Make sure to replace `secret` with your API key.
 
 ## Payload Data
 
@@ -137,58 +137,27 @@ api/v1/verifications
 | resource | URI path. For example: `api/v1/verifications` |
 | Body | Request body. The request body should contain a single JSON message object similar to the sample to the right.
 
-
-
-
-
-
-
-
-
-
-
-
 # Calls
 
 ## Create Resource
 
-```ruby
-require 'placeholder'
+Add a sentence or two to provide context.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+### HTTP Request
 
-```python
-import kittn
+`POST https://api.trusona.com/api/v1/verifications`
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
+> The body of the request should include:
 
 ```json
 [
   {
      "trusona_id": "123456789",
-     "action": "logi n",
+     "action": "login",
      "resource": "Bank of XYZ",
-     "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+     "agent_id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
      "level": 1,
-     "callback_url": "https://api .bankxyz.com/ auth/trusona/callback"
+     "callback_url": "https://api.bankxyz.com/auth/trusona/callback"
   }
 ]
 ```
@@ -204,7 +173,26 @@ agent_id | | lorem ipsum
 level | | lorem ipsum
 callback_url | | lorem ipsum
 
-This endpoint retrieves all kittens.
+### Response
+
+A successful response (201) includes an array of strings in the following format:
+
+```json
+{
+  "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0",
+  "trusona_id": "123456789",
+  "email": "robert.jordan@example.com",
+  "action": "login",
+  "resource": "Bank of XYZ",
+  "agent_id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+  "accepted_level": 1,
+  "status": "ACCEPTED",
+  "interval": 600,
+  "result_id": "079fb6a7-937c-4e18-8ceb-776a55d6b01e",
+  "created_date": "2016-01-19T17:10:58Z",
+  "updated_date": "2016-01-19T17: 10:58Z"
+}
+```
 
 ## GET Resource
 
@@ -212,46 +200,38 @@ This endpoint retrieves all kittens.
 
 `GET https://api.trusona.com/api/v1/verifications/verification_id`
 
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-trusona_id | false | If set to true, the result will also include cats.
-action | true | If set to false, the result will include kittens that have already been adopted.
-resource | | lorem ipsum
-agent_id | | lorem ipsum
-level | | lorem ipsum
-callback_url | | lorem ipsum
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-### Response
-
-A successful response (201) includes an array of strings in the following format:
+> The body of the request should include:
 
 ```json
 {
+  "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0",
+}
+```
 
+### Query Parameters ??
+
+Parameter | Default | Description
+--------- | ------- | -----------
+verification_id | false | Verification ID from Trusona in UUID form.
+
+
+### Response
+
+A successful response (200) includes an array of strings in the following format:
+
+```json
+{
   "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0",
   "trusona_id": "123456789",
   "email": "robert.jordan@example.com",
   "action": "login",
   "resource": "Bank of XYZ",
-  "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+  "agent_id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
   "accepted_level": 1,
   "status": "ACCEPTED",
   "interval": 600,
-  "resul t_id": "079fb6a7-937c-4e18-8ceb-776a55d6b01e",
+  "result_id": "079fb6a7-937c-4e18-8ceb-776a55d6b01e",
   "created_date": "2016-01-19T17:10:58Z",
   "updated_date": "2016-01-19T17: 10:58Z"
 }
 ```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
