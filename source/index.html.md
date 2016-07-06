@@ -1,9 +1,8 @@
 ---
 title: API Reference
 language_tabs:
-  - shell
+  - java
   - ruby
-  - python
   - javascript
 toc_footers:
   - '<a href=''#''>Sign Up for a Developer Key</a>'
@@ -20,54 +19,141 @@ Welcome to the Trusona API! You can use our API to access Trusona API endpoints,
 
 The Trusona API is organized around REST. Our API has predictable, resource-oriented URLs, and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+We have language bindings in Java, Ruby, and Javascript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
 # Authentication
 
-> To authorize, use this code:
+For enhanced security, Trusona employs a Keyed-**H**ashing **M**essage **A**uthentication **C**ode (HMAC) algorithm to ensure the integrity of the message, verify authentication of the sender and receiver to the client, and to prevent replay attacks.
+
+All requests require an HMAC authentication, <anything else> as part of the message body. The API Account key and API Secret key to be used for HMAC encryption are provided by your sales engineer.
+
+The cryptographic strength of the HMAC depends upon the size of the secret key that is used. As such, the SHA-256 function is used to generate a 256-bit signature for the submitted text.
+
+The following instructions assume that the `Date` header is present.
 
 ```shell
-Content-Type: application/json
-x- date: Tue, 19 Jan 2016 17: 10:58 GMT
-authorization: {access_token}:
-                Base64(HMAC- SHA256
-                      (HTTP_METHOD + \n + 
-                       MD5(HTTP_BODY) + \n + 
-                       CONTENT_TYPE + \n + 
-                       Date() + \n + 
-                       RESOURCE_URI))
+   Content-Type: application/json
+   x- date: Tue, 19 Jan 2016 17: 10:58 GMT
+   authorization: {access_token}:
+                   Base64(HMAC- SHA256
+                         (HTTP_METHOD + \n + 
+                          MD5(HTTP_BODY) + \n + 
+                          CONTENT_TYPE + \n + 
+                          Date() + \n + 
+                          RESOURCE_URI))
+  ```
+
+An authenticated request must include the `Authorization` header. The `Authorization` header contains three parts:
+
+1.  Version of the authentication scheme: HmacSHA256
+
+1.  **API Account Key** to identify the user.
+
+1.  The **Signature** proves who the user is and that the message has not been tampered with. The signature is generated using the following inputs:
+  - The `HTTP_METHOD+"\n"+MD5(HTTP_BODY)+"\n"+CONTENT_TYPE+"\n"+Date()+"\n"+RESOURCE_URI))` that you hashed using HMAC-SHA256.
+  - The API Shared Secret that you retrieve from your FraudNet Global Delivery team member.
+
+To authenticate a request, you must sign the request with the shared secret for the account that is making the request and pass that signature an HTTP request header as follows:
+
+```
+Authorization: HmacSHA256 796286d6-80b3-452b-``9677``-a57ccc6f0a23:lgzYy7bnC/7wlUuONzPmqPO2qZA369BiPitSwZP6YOQ=
 ```
 
-```python
-import <API>
+`Authorization: HmacSHA256 <ApiAccountKey>:<Signature>`
 
-api = kittn.authorize('meowmeowmeow')
+<aside class="notice">
+You must replace <code>ApiAccountKey</code> with your personal API key and <code>Signature</code> with the hashed signature.
+</aside>
+
+
+
+
+
+## Generating the Signature
+
+Use the tabs on the right to view the appropriate code snippet to generate the signature.
+
+```java
+import javax.crypto.*;
+import javax.crypto.spec.*;
+import java.util.prefs.*;
+
+String secretKey = "secret";  // hmac private key
+String payload = "payload";   // payload string -> POST + '\n' + Date … etc
+
+String UTF_8 = "UTF8";
+String algorithm = "HmacSHA256";
+
+Mac macGenerator = Mac.getInstance(algorithm);
+macGenerator.init(new SecretKeySpec(secretKey.getBytes(UTF_8), algorithm));
+byte[] hmacBytes = macGenerator.doFinal(payload.getBytes(UTF_8));
+Base64.byteArrayToBase64(hmacBytes);
+```
+
+```ruby
+import <placeholder>
+
+api = placeholder.authorize('placeholder')
 ```
 
 ```javascript
-const kittn = require('kittn');
+const placeholder = require('placeholder');
 
-let api = kittn.authorize('meowmeowmeow');
+let api = placeholder.authorize('placeholder');
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+> Make sure to replace `placeholder` with your API key.
 
-Trusona uses HMAC SHA-256 encruption to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+## Payload Data
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+This section contains information that describe the elements that are put into the payload that is used to generate the signature.
 
-`Authorization: meowmeowmeow`
+<aside class="warning">
+These values <b>must</b> match the request that is being sent. If they are different <b>in any way</b>, the signature will be wrong and you will receive a 401 response. This means that character case, spelling, date format, JSON message, etc. must be identical.
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+For example, <code>POST</code> and <code>post</code> do not match and will cause you to receive a 401 response.
 </aside>
+
+```
+POST
+Sun, 06 Jan 2014 08:49:37 GMT
+api/v1/verifications
+[
+  {
+     "trusona_id": "123456789",
+     "action": "logi n",
+     "resource": "Bank of XYZ",
+     "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+     "level": 1,
+     "callback_url": "https://api.bankxyz.com/auth/trusona/callback"
+  }
+]
+```
+
+| Name | Description |
+| ---- | ----------- |
+| Verb | HTTP method. Set this value to POST. |
+| Date | Contents of the `Date` header. This value must be present and the value included in the signature and the value you send over the wire must match. The following is an example of the Date header value: `Sun, 06 Jan 2014 08:49:37 GMT`. Other date formats are accepted, but the format must match the HTTP 1.1 specification: [http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html\#sec3.3](http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3). |
+| resource | URI path. For example: `api/v1/verifications` |
+| Body | Request body. The request body should contain a single JSON message object similar to the sample to the right.
+
+
+
+
+
+
+
+
+
+
+
 
 # Calls
 
 ## Create Resource
 
 ```ruby
-require 'kittn'
+require 'placeholder'
 
 api = Kittn::APIClient.authorize!('meowmeowmeow')
 api.kittens.get
