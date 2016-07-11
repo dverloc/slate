@@ -51,7 +51,7 @@ An authenticated request must include the `Authorization` header. The `Authoriza
 
 1.  The **Signature** proves who the user is and that the message has not been tampered with. The signature is generated using the following inputs:
   - The `HTTP_METHOD+"\n"+MD5(HTTP_BODY)+"\n"+CONTENT_TYPE+"\n"+Date()+"\n"+RESOURCE_URI))` that you hashed using HMAC-SHA256.
-  - The API Shared Secret that you retrieve from your FraudNet Global Delivery team member.
+  - The API Shared Secret that you retrieve from your Trusona sales engineer.
 
 To authenticate a request, you must sign the request with the shared secret for the account that is making the request and pass that signature an HTTP request header as follows:
 
@@ -121,10 +121,11 @@ api/v1/verifications
 [
   {
      "trusona_id": "123456789",
-     "action": "logi n",
+     "email": "email@domain.com",
+     "action": "login",
      "resource": "Bank of XYZ",
-     "agent _id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
-     "level": 1,
+     "agent_id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
+     "desired_level": 1,
      "callback_url": "https://api.bankxyz.com/auth/trusona/callback"
   }
 ]
@@ -137,45 +138,111 @@ api/v1/verifications
 | resource | URI path. For example: `api/v1/verifications` |
 | Body | Request body. The request body should contain a single JSON message object similar to the sample to the right.
 
+The attributes included in the body are described below.
+
+Attribute | Type | Description
+--------- | ---- | ------------
+trusona_id | `string`, required | Trusona ID of referenced user.
+email |  `string`, required | Registered email of referenced user.
+action | `string`, required | Requested action to trigger ID trusonification.
+resource | `string`, required | Resource to be acted upon by specified action.
+agent_id | `string`, required | Account handle of agent acting on behalf of the relying party (Must also be TruNotary for RP).
+desired_level | `enum[number]`, required | Desired level of insuranced. Possible values are 1, 2, 3, or 4.
+callback_url | `string`, required | URL to be fetched via `GET` when verification is `COMPLETE`.
+
 # Calls
 
 ## Create Resource
 
-Add a sentence or two to provide context.
+Creates a resource to be trusonafied.
 
 ### HTTP Request
 
 `POST https://api.trusona.com/api/v1/verifications`
 
-> The body of the request should include:
+### Full Request Example
 
+The full request includes the header, body, and schema. Check out the full example on the right.
+
+```shell
+Content-Type: application/json
+   x- date: Tue, 19 Jan 2016 17: 10:58 GMT
+   authorization: {access_token}:
+                   Base64(HMAC- SHA256
+                         (HTTP_METHOD + \n + 
+                          MD5(HTTP_BODY) + \n + 
+                          CONTENT_TYPE + \n + 
+                          Date() + \n + 
+                          RESOURCE_URI))
+
+```
 ```json
 [
   {
      "trusona_id": "123456789",
+     "email": "email@domain.com",
      "action": "login",
      "resource": "Bank of XYZ",
      "agent_id": "ac1abbc1-15c1-4467-8583-6749c8d63bb4",
-     "level": 1,
+     "desired_level": 1,
      "callback_url": "https://api.bankxyz.com/auth/trusona/callback"
   }
 ]
+
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "trusona_id": {
+        "type": "string",
+        "description": "Trusona ID of referenced"
+      },
+      "email": {
+        "type": "string",
+        "description": "Registered email of referenced user"
+      },
+      "action": {
+        "type": "string",
+        "description": "Requested action to trusonafy"
+      },
+      "resource": {
+        "type": "string",
+        "description": "Resource to be acted on by specified action"
+      },
+      "agent_id": {
+        "type": "string",
+        "description": "Account handle of agent acting on behalf of the relying party (Must also be TruNotary for RP)"
+      },
+      "desired_level": {
+        "type": "number",
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "description": "Desired level of insurance"
+      "callback_url": {
+        "type": "string",
+        "description": "URL to be fetched via GET when verification is COMPLETE"
+      }
+    },
+    "required": [
+      "action",
+      "resource",
+      "desired_level"
+    ],
+    "oneOf": [
+      {"required": ["email"]},
+      {"required": ["trusona_id"]}
+    ]
+}
 ```
 
-### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-trusona_id | false | If set to true, the result will also include cats.
-action | true | If set to false, the result will include kittens that have already been adopted.
-resource | | lorem ipsum
-agent_id | | lorem ipsum
-level | | lorem ipsum
-callback_url | | lorem ipsum
+## Create Resource Response
 
-### Response
-
-A successful response (201) includes an array of strings in the following format:
+> A successful response (201) includes an array of strings in the following format:
 
 ```json
 {
@@ -193,6 +260,21 @@ A successful response (201) includes an array of strings in the following format
   "updated_date": "2016-01-19T17: 10:58Z"
 }
 ```
+
+Attribute | Type | Description
+--------- | ---- | -----------
+verification_id | `string` | Verification ID in UUID form.
+trusona_id | `string` | Trusona ID of referenced user.
+email | `string` | Registered email of referenced user
+action | `string` | Action user performed to trigger ID verification.
+resource | `string` | lorem ipsum
+agent_id | `string` | lorem ipsum
+accepted_level | `string` | Field description for accepted_level
+status | `string` | Filler text
+interval | `string` | Time between 
+result_id | `string` | Result from Trusona integration
+created_date | `string` | Date XX was created.
+updated_date | `string` | Date update was made to XX.
 
 ## GET Resource
 
@@ -208,16 +290,16 @@ A successful response (201) includes an array of strings in the following format
 }
 ```
 
-### Query Parameters ??
+### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-verification_id | false | Verification ID from Trusona in UUID form.
+Parameter | Description
+--------- | -----------
+verification_id | Verification ID from Trusona in UUID form.
 
 
 ### Response
 
-A successful response (200) includes an array of strings in the following format:
+> A successful response (200) includes an array of strings in the following format:
 
 ```json
 {
@@ -235,3 +317,18 @@ A successful response (200) includes an array of strings in the following format
   "updated_date": "2016-01-19T17: 10:58Z"
 }
 ```
+
+Parameter | Description
+--------- | -----------
+verification_id | ID to verify identity.
+trusona_id | Trusona ID associated to the user.
+email | User's email address
+action | Action user performed to trigger ID verification.
+resource | lorem ipsum
+agent_id | lorem ipsum
+accepted_level | Field description for accepted_level
+status | Filler text
+interval | Time between 
+result_id | Result from Trusona integration
+created_date | Date XX was created.
+updated_date | Date update was made to XX.
