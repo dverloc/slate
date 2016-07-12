@@ -8,7 +8,7 @@ toc_footers:
 ##  - '<a href=''#''>Sign Up for a Developer Key</a>'
 ##  - '<a href=''https://github.com/tripit/slate''>Documentation Powered by Slate</a>'
 includes:
-  - errors
+ # - errors
 search: false
 published: true
 ---
@@ -19,7 +19,7 @@ Welcome to the Trusona API! You can use our API to access Trusona API endpoints,
 
 The Trusona API is organized around REST. Our API has predictable, resource-oriented URLs, and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
 
-We have language bindings in Java, Ruby, and Javascript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+You can view code examples in the dark area to the right.
 
 # Authentication
 
@@ -64,9 +64,6 @@ Authorization: HmacSHA256 796286d6-80b3-452b-``9677``-a57ccc6f0a23:lgzYy7bnC/7wl
 <aside class="notice">
 You must replace <code>ApiAccountKey</code> with your personal API key and <code>Signature</code> with the hashed signature.
 </aside>
-
-
-
 
 
 ## Generating the Signature
@@ -243,6 +240,10 @@ Content-Type: application/json
 
 > A successful response (201) includes an array of strings in the following format:
 
+```shell
+Content-Type: application/json
+```
+
 ```json
 {
   "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0",
@@ -258,6 +259,8 @@ Content-Type: application/json
   "created_date": "2016-01-19T17:10:58Z",
   "updated_date": "2016-01-19T17: 10:58Z"
 }
+
+
 ```
 
 Attribute | Type | Description
@@ -275,6 +278,13 @@ result_id | `string` | Result ID of completed verification details.
 created_date | `string` | Date record was created.
 updated_date | `string` | Date record was last updated.
 
+## Create Resource Errors
+
+Error Code | Meaning
+---------- | -------
+403 | Full authentication is required to access this resource. This means that THIS went wrong and to resolve, you must DO THIS THING.
+422 | Unprocessible entity. This means that THIS went wrong and to resolve, you must DO THIS THING.
+
 # GET Resource
 
 ## HTTP Request
@@ -285,7 +295,7 @@ updated_date | `string` | Date record was last updated.
 
 ```json
 {
-  "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0",
+  "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0"
 }
 ```
 
@@ -297,6 +307,10 @@ verification_id | Verification ID from Trusona in UUID form.
 ## Get Resource Response
 
 > A successful response (200) includes an array of strings in the following format:
+
+```shell
+Content-Type: application/json
+```
 
 ```json
 {
@@ -313,19 +327,94 @@ verification_id | Verification ID from Trusona in UUID form.
   "created_date": "2016-01-19T17:10:58Z",
   "updated_date": "2016-01-19T17: 10:58Z"
 }
+
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "verification_id": {
+      "type": "string",
+      "description": "Verification ID in UUID form"
+    },
+    "trusona_id": {
+      "type": "string",
+      "description": "Trusona ID of referenced user"
+    },
+    "email": {
+      "type": "string",
+      "description": "Registered email of referenced user"
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested action to trusonafy"
+    },
+    "resource": {
+      "type": "string",
+      "description": "Resource to be acted on by specfied action"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Account handle of agent acting on behalf of the relying party (Must also be notary for RP)"
+    },
+    "accepted_level": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "description": " Accepted at this level of insurance"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ACCEPTED",
+        "ACCEPTED_AT_LOWER_LEVEL",
+        "ACCEPTED_AT_HIGHER_LEVEL",
+        "REJECTED",
+        "IN_PROGRESS"
+      ],
+      "description": "Status of verification"
+    },
+    "interval": {
+      "type": "number",
+      "description": "Next suggested polling interval in seconds"
+    },
+    "resul t_i d": {
+      "type": "string",
+      "description": "Result ID of completed verification details"
+    },
+    "created_date": {
+      "type": "string",
+      "description": "Dat e record was created"
+    },
+    "updated_date": {
+      "type": "string",
+      "description": "Dat e record was last updated"
+    }
+  }
+}
+
 ```
 
-Parameter | Description
---------- | -----------
-verification_id | ID to verify identity.
-trusona_id | Trusona ID associated to the user.
-email | User's email address
-action | Action user performed to trigger ID verification.
-resource | lorem ipsum
-agent_id | lorem ipsum
-accepted_level | Field description for accepted_level
-status | Filler text
-interval | Time between 
-result_id | Result from Trusona integration
-created_date | Date XX was created.
-updated_date | Date update was made to XX.
+Attribute | Type | Description
+--------- | ---- | -----------
+verification_id | `string` | Verification ID in UUID form.
+trusona_id | `string` | Trusona ID of referenced user.
+email | `string` | Registered email of referenced user
+action | `string` | Action performed to trigger ID trusonafication.
+resource | `string` | Resource to be acted on by spefied action.
+agent_id | `string` | Account handle of agent acting on behalf of the relying party (Must also be notary for RP).
+accepted_level | `enum[number]` | Accepted level of insurance. Possible responses are: `1`, `2`, `3`, or `4`.
+status | `enum[string]` | Status of the verification. Possible responses are `ACCEPTED`, `ACCEPTED_AT_LOWER_LEVEL`, `ACCEPTED_AT_HIGHER_LEVEL`, `REJECTED`, OR `IN_PROGRESS`.
+interval | `number` | Next suggested polling interval in seconds.
+result_id | `string` | Result ID of completed verification details.
+created_date | `string` | Date record was created.
+updated_date | `string` | Date record was last updated.
+
+## Get Resource Errors
+
+Error Code | Meaning
+---------- | -------
+403 | Full authentication is required to access this resource. This means that THIS went wrong and to resolve, you must DO THIS THING.
