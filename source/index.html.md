@@ -1,15 +1,15 @@
 ---
 title: API Reference
 language_tabs:
-  - java
-  - ruby
-  - javascript
+#  - java
+#  - ruby
+#  - javascript
 toc_footers:
 ##  - '<a href=''#''>Sign Up for a Developer Key</a>'
 ##  - '<a href=''https://github.com/tripit/slate''>Documentation Powered by Slate</a>'
 includes:
   - errors
-search: true
+search: false
 published: true
 ---
 
@@ -150,13 +150,12 @@ agent_id | `string`, required | Account handle of agent acting on behalf of the 
 desired_level | `enum[number]`, required | Desired level of insuranced. Possible values are 1, 2, 3, or 4.
 callback_url | `string`, required | URL to be fetched via `GET` when verification is `COMPLETE`.
 
-# Calls
 
-## Create Resource
+# Create Resource
 
 Creates a resource to be trusonafied.
 
-### HTTP Request
+## HTTP Request
 
 `POST https://api.trusona.com/api/v1/verifications`
 
@@ -266,19 +265,19 @@ Attribute | Type | Description
 verification_id | `string` | Verification ID in UUID form.
 trusona_id | `string` | Trusona ID of referenced user.
 email | `string` | Registered email of referenced user
-action | `string` | Action user performed to trigger ID verification.
-resource | `string` | lorem ipsum
-agent_id | `string` | lorem ipsum
-accepted_level | `string` | Field description for accepted_level
-status | `string` | Filler text
-interval | `string` | Time between 
-result_id | `string` | Result from Trusona integration
-created_date | `string` | Date XX was created.
-updated_date | `string` | Date update was made to XX.
+action | `string` | Action performed to trigger ID trusonafication.
+resource | `string` | Resource to be acted on by spefied action.
+agent_id | `string` | Account handle of agent acting on behalf of the relying party (Must also be notary for RP).
+accepted_level | `enum[number]` | Accepted level of insurance. Possible responses are: `1`, `2`, `3`, or `4`.
+status | `enum[string]` | Status of the verification. Possible responses are `ACCEPTED`, `ACCEPTED_AT_LOWER_LEVEL`, `ACCEPTED_AT_HIGHER_LEVEL`, `REJECTED`, OR `IN_PROGRESS`.
+interval | `number` | Next suggested polling interval in seconds.
+result_id | `string` | Result ID of completed verification details.
+created_date | `string` | Date record was created.
+updated_date | `string` | Date record was last updated.
 
-## GET Resource
+# GET Resource
 
-### HTTP Request
+## HTTP Request
 
 `GET https://api.trusona.com/api/v1/verifications/verification_id`
 
@@ -290,14 +289,12 @@ updated_date | `string` | Date update was made to XX.
 }
 ```
 
-### Query Parameters
-
 Parameter | Description
 --------- | -----------
 verification_id | Verification ID from Trusona in UUID form.
 
 
-### Response
+## Get Resource Response
 
 > A successful response (200) includes an array of strings in the following format:
 
