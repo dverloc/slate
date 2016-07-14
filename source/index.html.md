@@ -99,7 +99,7 @@ const placeholder = require('placeholder');
 let api = placeholder.authorize('placeholder');
 ```
 
-> Make sure to replace `secret` with your API key.
+> Make sure to replace `secret` with your API key and `payload` with the payload data described in the next section.
 
 ## Payload Data
 
@@ -145,7 +145,7 @@ Creates a resource to be trusonafied.
 
 `POST https://api.trusona.com/api/v1/verifications`
 
-### Full Request Example
+## Request Example
 
 The full request includes the header, body, and schema. Check out the example on the right.
 
@@ -225,11 +225,9 @@ Content-Type: application/json
 ```
 
 
-## Create Resource Response
+## Response Example
 
 A successful response (201) includes a header, response body, and schema. Check out the response example on the right.
-
-### Full Response Example
 
 ```shell
 Content-Type: application/json
@@ -342,7 +340,7 @@ Error Code | Meaning
 403 | Full authentication is required to access this resource. This means that THIS went wrong and to resolve, you must DO THIS THING.
 422 | Unprocessible entity. This means that THIS went wrong and to resolve, you must DO THIS THING.
 
-# GET Resource
+# Get Resource
 
 Gets the trusonafication ID.
 
@@ -351,7 +349,7 @@ Gets the trusonafication ID.
 
 `GET https://api.trusona.com/api/v1/verifications/verification_id`
 
-### Full Request Example
+## Request Example
 
 The full request includes the header, body, and schema. Check out the example on the right.
 
@@ -373,12 +371,12 @@ Content-Type: application/json
 }
 ```
 
-Parameter | Description
---------- | -----------
-verification_id | Verification ID from Trusona in UUID form.
+Parameter | Type | Description
+--------- | ---- | -----------
+verification_id | string | Verification ID from Trusona in UUID form.
 
 
-## Get Resource Response
+## Response Example
 
 > A successful response (200) includes an array of strings in the following format:
 
