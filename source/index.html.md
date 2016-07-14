@@ -287,12 +287,29 @@ Error Code | Meaning
 
 # GET Resource
 
+Gets the trusonafication ID.
+
+
 ## HTTP Request
 
 `GET https://api.trusona.com/api/v1/verifications/verification_id`
 
-> The body of the request should include:
+### Full Request Example
 
+The full request includes the header, body, and schema. Check out the full example on the right.
+
+```shell
+Content-Type: application/json
+   x- date: Tue, 19 Jan 2016 17: 10:58 GMT
+   authorization: {access_token}:
+                   Base64(HMAC- SHA256
+                         (HTTP_METHOD + \n + 
+                          MD5(HTTP_BODY) + \n + 
+                          CONTENT_TYPE + \n + 
+                          Date() + \n + 
+                          RESOURCE_URI))
+
+```
 ```json
 {
   "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0"
