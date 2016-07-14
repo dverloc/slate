@@ -338,9 +338,9 @@ updated_date | string | Date record was last updated.
 
 HTTP Response Code | Status Text | Meaning
 ---------- | -----| -------
-201 | Created | Everything worked as expected.
-403 | Forbidden | Full authentication is required to access this resource.
-422 | Unprocessible entity | The server understands the content type of the request entity and the syntax of the request entity is correct, but was unable to process the contained instructions.
+201 | Created | Dude, good work!
+403 | Forbidden | Ahh-ahh-ahh...you didn't say the magic word.
+422 | Unprocessible entity | Server gets what you're laying down and you said the right words, but there was just something about your tone that wasn't working.
 
 # Get Resource
 
