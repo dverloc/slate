@@ -68,7 +68,7 @@ You must replace <code>ApiAccountKey</code> with your personal API key and <code
 
 ## Generating the Signature
 
-Use the tabs on the right to view the appropriate code snippet to generate the signature.
+Use the example in the panel on the right to generate the signature.
 
 ```java
 import javax.crypto.*;
@@ -111,10 +111,12 @@ These values <b>must</b> match the request that is being sent. If they are diffe
 For example, <code>POST</code> and <code>post</code> do not match and will cause you to receive a 401 response.
 </aside>
 
-```
+```shell
 POST
 Sun, 06 Jan 2014 08:49:37 GMT
 api/v1/verifications
+```
+```json
 [
   {
      "trusona_id": "123456789",
@@ -133,20 +135,7 @@ api/v1/verifications
 | Verb | HTTP method. Set this value to POST. |
 | Date | Contents of the `Date` header. This value must be present and the value included in the signature and the value you send over the wire must match. The following is an example of the Date header value: `Sun, 06 Jan 2014 08:49:37 GMT`. Other date formats are accepted, but the format must match the HTTP 1.1 specification: [http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html\#sec3.3](http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3). |
 | resource | URI path. For example: `api/v1/verifications` |
-| Body | Request body. The request body should contain a single JSON message object similar to the sample to the right.
-
-The attributes included in the body are described below.
-
-Attribute | Type | Description
---------- | ---- | ------------
-trusona_id | `string`, required | Trusona ID of referenced user.
-email |  `string`, required | Registered email of referenced user.
-action | `string`, required | Requested action to trigger ID trusonification.
-resource | `string`, required | Resource to be acted upon by specified action.
-agent_id | `string`, required | Account handle of agent acting on behalf of the relying party (Must also be TruNotary for RP).
-desired_level | `enum[number]`, required | Desired level of insuranced. Possible values are 1, 2, 3, or 4.
-callback_url | `string`, required | URL to be fetched via `GET` when verification is `COMPLETE`.
-
+| Body | Request body. The request body should contain a single JSON message object similar to the sample to the right. Specific examples for the `Create` and `Get` requests are included below.
 
 # Create Resource
 
@@ -158,7 +147,7 @@ Creates a resource to be trusonafied.
 
 ### Full Request Example
 
-The full request includes the header, body, and schema. Check out the full example on the right.
+The full request includes the header, body, and schema. Check out the example on the right.
 
 ```shell
 Content-Type: application/json
@@ -191,23 +180,23 @@ Content-Type: application/json
     "properties": {
       "trusona_id": {
         "type": "string",
-        "description": "Trusona ID of referenced"
+        "description": "Trusona ID of referenced."
       },
       "email": {
         "type": "string",
-        "description": "Registered email of referenced user"
+        "description": "Registered email of referenced user."
       },
       "action": {
         "type": "string",
-        "description": "Requested action to trusonafy"
+        "description": "Requested action to trusonafy."
       },
       "resource": {
         "type": "string",
-        "description": "Resource to be acted on by specified action"
+        "description": "Resource to be acted on by specified action."
       },
       "agent_id": {
         "type": "string",
-        "description": "Account handle of agent acting on behalf of the relying party (Must also be TruNotary for RP)"
+        "description": "Account handle of agent acting on behalf of the relying party (Must also be TruNotary for relying party)."
       },
       "desired_level": {
         "type": "number",
@@ -217,10 +206,10 @@ Content-Type: application/json
           3,
           4
         ],
-        "description": "Desired level of insurance"
+        "description": "Desired level of insurance."
       "callback_url": {
         "type": "string",
-        "description": "URL to be fetched via GET when verification is COMPLETE"
+        "description": "URL to be fetched via GET when verification is COMPLETE."
       }
     },
     "required": [
@@ -238,7 +227,9 @@ Content-Type: application/json
 
 ## Create Resource Response
 
-> A successful response (201) includes an array of strings in the following format:
+A successful response (201) includes a header, response body, and schema. Check out the response example on the right.
+
+### Full Response Example
 
 ```shell
 Content-Type: application/json
@@ -260,23 +251,89 @@ Content-Type: application/json
   "updated_date": "2016-01-19T17: 10:58Z"
 }
 
-
+{
+  "$schema": "http://json-schema.org/draft-04/ schema#",
+  "type": "object",
+  "properties": {
+    "verification_id": {
+      "type": "string",
+      "description": "Verification ID in UUID form."
+    },
+    "trusona_id": {
+      "type": "string",
+      "description": "Trusona ID of referenced user."
+    },
+    "email": {
+      "type": "string",
+      "description": "Registered email of referenced user."
+    },
+    "action": {
+      "type": "string",
+      "description": "Requested action to trusonafy."
+    },
+    "resource": {
+      "type": "string",
+      "description": "Resource to be acted on by spefied action."
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Account handle of agent acting on behalf of the relying party (Must also be notary for relying party)."
+    },
+    "accepted_level": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "description": "Accepted at this level of insurance."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ACCEPTED",
+        "ACCEPTED_AT_LOWER_LEVEL",
+        "ACCEPTED_AT_HI GHER_LEVEL",
+        "REJECTED",
+        "IN_PROGRESS"
+      ],
+      "description": "Status of verification"
+    },
+    "interval": {
+      "type": "number",
+      "description": "Next suggested polling interval in seconds."
+    },
+    "result_id": {
+      "type": "string",
+      "description": "Result ID of completed verification details."
+    },
+    "created_date": {
+      "type": "string",
+      "description": "Date record was created."
+    },
+    "updated_date": {
+      "type": "string",
+      "description": "Date record was last updated."
+    }
+  }
+}
 ```
 
 Attribute | Type | Description
 --------- | ---- | -----------
-verification_id | `string` | Verification ID in UUID form.
-trusona_id | `string` | Trusona ID of referenced user.
-email | `string` | Registered email of referenced user
-action | `string` | Action performed to trigger ID trusonafication.
-resource | `string` | Resource to be acted on by spefied action.
-agent_id | `string` | Account handle of agent acting on behalf of the relying party (Must also be notary for RP).
-accepted_level | `enum[number]` | Accepted level of insurance. Possible responses are: `1`, `2`, `3`, or `4`.
-status | `enum[string]` | Status of the verification. Possible responses are `ACCEPTED`, `ACCEPTED_AT_LOWER_LEVEL`, `ACCEPTED_AT_HIGHER_LEVEL`, `REJECTED`, OR `IN_PROGRESS`.
-interval | `number` | Next suggested polling interval in seconds.
-result_id | `string` | Result ID of completed verification details.
-created_date | `string` | Date record was created.
-updated_date | `string` | Date record was last updated.
+verification_id | string | Verification ID in UUID form.
+trusona_id | string | Trusona ID of referenced user.
+email | string | Registered email of referenced user.
+action | string | Action performed to trigger ID trusonafication.
+resource | string | Resource to be acted on by spefied action.
+agent_id | string | Account handle of agent acting on behalf of the relying party (Must also be notary for relying party).
+accepted_level | enum[number] | Accepted level of insurance. Possible responses are: `1`, `2`, `3`, or `4`.
+status | enum[string] | Status of the verification. Possible responses are `ACCEPTED`, `ACCEPTED_AT_LOWER_LEVEL`, `ACCEPTED_AT_HIGHER_LEVEL`, `REJECTED`, OR `IN_PROGRESS`.
+interval | number | Next suggested polling interval in seconds.
+result_id | string | Result ID of completed verification details.
+created_date | string | Date record was created.
+updated_date | string | Date record was last updated.
 
 ## Create Resource Errors
 
@@ -296,7 +353,7 @@ Gets the trusonafication ID.
 
 ### Full Request Example
 
-The full request includes the header, body, and schema. Check out the full example on the right.
+The full request includes the header, body, and schema. Check out the example on the right.
 
 ```shell
 Content-Type: application/json
@@ -351,27 +408,27 @@ Content-Type: application/json
   "properties": {
     "verification_id": {
       "type": "string",
-      "description": "Verification ID in UUID form"
+      "description": "Verification ID in UUID form."
     },
     "trusona_id": {
       "type": "string",
-      "description": "Trusona ID of referenced user"
+      "description": "Trusona ID of referenced user."
     },
     "email": {
       "type": "string",
-      "description": "Registered email of referenced user"
+      "description": "Registered email of referenced user."
     },
     "action": {
       "type": "string",
-      "description": "Requested action to trusonafy"
+      "description": "Requested action to trusonafy."
     },
     "resource": {
       "type": "string",
-      "description": "Resource to be acted on by specfied action"
+      "description": "Resource to be acted on by specfied action."
     },
     "agent_id": {
       "type": "string",
-      "description": "Account handle of agent acting on behalf of the relying party (Must also be notary for RP)"
+      "description": "Account handle of agent acting on behalf of the relying party (Must also be notary for relying party)."
     },
     "accepted_level": {
       "type": "number",
@@ -381,7 +438,7 @@ Content-Type: application/json
         3,
         4
       ],
-      "description": " Accepted at this level of insurance"
+      "description": "Accepted at this level of insurance."
     },
     "status": {
       "type": "string",
@@ -392,43 +449,42 @@ Content-Type: application/json
         "REJECTED",
         "IN_PROGRESS"
       ],
-      "description": "Status of verification"
+      "description": "Status of verification."
     },
     "interval": {
       "type": "number",
-      "description": "Next suggested polling interval in seconds"
+      "description": "Next suggested polling interval in seconds."
     },
     "resul t_i d": {
       "type": "string",
-      "description": "Result ID of completed verification details"
+      "description": "Result ID of completed verification details."
     },
     "created_date": {
       "type": "string",
-      "description": "Dat e record was created"
+      "description": "Date record was created."
     },
     "updated_date": {
       "type": "string",
-      "description": "Dat e record was last updated"
+      "description": "Date record was last updated."
     }
   }
 }
-
 ```
 
 Attribute | Type | Description
 --------- | ---- | -----------
-verification_id | `string` | Verification ID in UUID form.
-trusona_id | `string` | Trusona ID of referenced user.
-email | `string` | Registered email of referenced user
-action | `string` | Action performed to trigger ID trusonafication.
-resource | `string` | Resource to be acted on by spefied action.
-agent_id | `string` | Account handle of agent acting on behalf of the relying party (Must also be notary for RP).
-accepted_level | `enum[number]` | Accepted level of insurance. Possible responses are: `1`, `2`, `3`, or `4`.
-status | `enum[string]` | Status of the verification. Possible responses are `ACCEPTED`, `ACCEPTED_AT_LOWER_LEVEL`, `ACCEPTED_AT_HIGHER_LEVEL`, `REJECTED`, OR `IN_PROGRESS`.
-interval | `number` | Next suggested polling interval in seconds.
-result_id | `string` | Result ID of completed verification details.
-created_date | `string` | Date record was created.
-updated_date | `string` | Date record was last updated.
+verification_id | string | Verification ID in UUID form.
+trusona_id | string | Trusona ID of referenced user.
+email | string | Registered email of referenced user
+action | string | Action performed to trigger ID trusonafication.
+resource | string | Resource to be acted on by spefied action.
+agent_id | string | Account handle of agent acting on behalf of the relying party (Must also be notary for RP).
+accepted_level | enum[number] | Accepted level of insurance. Possible responses are: `1`, `2`, `3`, or `4`.
+status | enum[string] | Status of the verification. Possible responses are `ACCEPTED`, `ACCEPTED_AT_LOWER_LEVEL`, `ACCEPTED_AT_HIGHER_LEVEL`, `REJECTED`, OR `IN_PROGRESS`.
+interval | number | Next suggested polling interval in seconds.
+result_id | string | Result ID of completed verification details.
+created_date | string | Date record was created.
+updated_date | string | Date record was last updated.
 
 ## Get Resource Errors
 
