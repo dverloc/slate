@@ -32,6 +32,10 @@ The cryptographic strength of the HMAC depends upon the size of the secret key t
 
 The following instructions assume that the `Date` header is present.
 
+<aside class="error">
+If your HTTP client does not allow you to set the date header or access it before the request is sent, you may set an X-Date header with the current date in RFC1123 (<code>HttpDate</code>) and use that value in your HMAC authentication.
+</aside>
+
 ```shell
    Content-Type: application/json
    x- date: Tue, 19 Jan 2016 17: 10:58 GMT
@@ -57,13 +61,13 @@ An authenticated request must include the `Authorization` header. The `Authoriza
 To authenticate a request, you must sign the request with the shared secret for the account that is making the request and pass that signature an HTTP request header as follows:
 
 ```
-Authorization: HmacSHA256 796286d6-80b3-452b-``9677``-a57ccc6f0a23:lgzYy7bnC/7wlUuONzPmqPO2qZA369BiPitSwZP6YOQ=
+Authorization: TRUSONA 796286d6-80b3-452b-``9677``-a57ccc6f0a23:lgzYy7bnC/7wlUuONzPmqPO2qZA369BiPitSwZP6YOQ=
 ```
 
-`Authorization: HmacSHA256 <ApiAccountKey>:<Signature>`
+`Authorization: TRUSONA <ApiKey>:<Base64(Signature)>`
 
 <aside class="notice">
-You must replace <code>ApiAccountKey</code> with your personal API key and <code>Signature</code> with the hashed signature.
+You must replace <code>ApiAccountKey</code> with your personal API key and <code>Signature</code> with the hashed signature. Have a look at the example on the right to see what the HTTP request header should look like.
 </aside>
 
 
@@ -336,11 +340,11 @@ updated_date | string | Date record was last updated.
 
 ### Create Resource Response Codes
 
-HTTP Response Code | Status Text | Meaning
----------- | -----| -------
-201 | Created | Everything worked as expected.
-403 | Forbidden | Full authentication is required to access this resource.
-422 | Unprocessible entity | The server understands the content type of the request entity and the syntax of the request entity is correct, but was unable to process the contained instructions.
+HTTP Response Code | Message
+---------- | ------
+201 | Everything worked as expected. You'll receive a response as shown on the right.
+403 | Full authentication is required to access this resource.
+422 | Unprocessible entity. This means the server understands the content type of the request entity and the syntax of the request entity is correct, but was unable to process the contained instructions.
 
 # Get Resource
 
@@ -370,6 +374,55 @@ Content-Type: application/json
 ```json
 {
   "verification_id": "2cb9d511-8171-4113-a8af-201b20533cc0"
+}
+
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "trusona_id": {
+        "type": "string",
+        "description": "Trusona ID of referenced."
+      },
+      "email": {
+        "type": "string",
+        "description": "Registered email of referenced user."
+      },
+      "action": {
+        "type": "string",
+        "description": "Requested action to trusonafy."
+      },
+      "resource": {
+        "type": "string",
+        "description": "Resource to be acted on by specified action."
+      },
+      "agent_id": {
+        "type": "string",
+        "description": "Account handle of agent acting on behalf of the relying party (Must also be TruNotary for relying party)."
+      },
+      "desired_level": {
+        "type": "number",
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "description": "Desired level of insurance"
+      "callback_url": {
+        "type": "string",
+        "description": "URL to be fetched via GET when verification is COMPLETE."
+      }
+    },
+    "required": [
+      "action",
+      "resource",
+      "desired_level"
+    ],
+    "oneOf": [
+      {"required": ["email"]},
+      {"required": ["trusona_id"]}
+    ]
 }
 ```
 
@@ -455,7 +508,7 @@ Content-Type: application/json
       "type": "number",
       "description": "Next suggested polling interval in seconds."
     },
-    "resul t_i d": {
+    "result_i d": {
       "type": "string",
       "description": "Result ID of completed verification details."
     },
@@ -488,7 +541,7 @@ updated_date | string | Date record was last updated.
 
 ### Get Resource Response Codes
 
-HTTP Response Code | Status Text | Meaning
----------- | -----| -------
-200 | OK | The resource has been fetched and is transmitted in the message body.
-403 | Forbidden | Full authentication is required to access this resource.
+HTTP Response Code | Message
+--------- | ----------
+200 | Everything worked as expected. You'll receive a response as shown on the right.
+403 | Full authentication is required to access this resource.
