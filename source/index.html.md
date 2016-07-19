@@ -16,13 +16,42 @@ published: true
 
 # Introduction
 
-Welcome to the Trusona API! You can use our API to access Trusona API endpoints, which can get information on various stuffs.
+Trusona provides a wide range of identity proofing and strong multi-factor authentication including: multi factor login, wire transfers authorization, password-less authentication, call center identity proofing...the list goes on. Even with the large number of options for integrating Trusona, there are ultimately just a few lines of code needed for each transaction. 
+
+With the few lines of code, you specify which user you’d like to verify and at what level: Essential, Executive, or Elite. Then, Trusona simply lets you know if that user accepted, rejected, or did nothing with the verification. If they accepted, we also let you know at what level they accepted. We've provided a [couple of scenarios](#sarah) below to demonstrate what we mean.
+
+<aside class="notice">The security and identity proofing that goes into the Trusona Elite level are so unbreakable that each wire transfer at this level are insured for one million dollars.</aside>
+
+## <a name="sarah"></a> Sarah's Scenario
+
+Sarah has been trusonafied at the Elite level. This mans that she uses the hard cryptographic token called TruToken and has already been identity proofed with her driver license and ePassport. Now, Sarah wants to login to the extranet at work which uses Trusona. 
+
+On the login page, Sarah types in the email address she used to register with Trusona and clicks **LOGIN**. No password is required and Trusona sends her a push notification to her Trusona mobile app. She accepts authentication in the mobile app and used the hard cryptographic token, called TruToken, to accept authentication at the full Elite level. Accepting at the full Elite level means that she used the hard cryptographic token, TruToken.
+
+## Marcus's Scenario
+
+Marcus uses Trusona with his private wealth manager. Like Sarah, Marcus has been trusonafied at the Elite level. 
+
+Marcus has instructed his private wealth manager to approve transactions over one million dollars only after Marcus verifies the transaction using his TruToken from Trusona. 
+
+However, in cases where Marcus doesn’t have his TruToken with him, he has instructed his private wealth management firm to approve transactions for up to (but not above) one million dollars after Marcus verifies the transactions at the lower Executive level. At the Executive level Marcus can scan his driver license to accept a transaction. 
+
+# The Trusona API
+
+These scenarios, and others like them, are enabled by the Trusona API. With the Trusona RESTful API, you can submit a [request for a resource](#resource) to be trusonafied or request an [existing trusonafication ID](#get). 
 
 The Trusona API is organized around REST. Our API has predictable, resource-oriented URLs, and uses HTTP response codes to indicate API errors. JSON is returned by all API responses, including errors.
 
 You can view code examples in the dark area to the right.
 
-# Authentication
+## What It Takes to Integrate
+
+The nuts and bolts of the few lines of code needed to integrate Trusona into your workflow are straightforward. They are:
+
+1. Request header that includes an HMAC signature for [authentication](#authentication).
+1. [Request body and schema](#requestBody) that includes the attributes of the performed action
+
+# <a name="authentication"></a>Authentication
 
 For enhanced security, Trusona employs a Keyed-**H**ashing **M**essage **A**uthentication **C**ode (HMAC) algorithm to ensure the integrity of the message, verify authentication of the sender and receiver to the client, and to prevent replay attacks.
 
@@ -142,7 +171,7 @@ api/v1/verifications
 | resource | URI path. For example: `api/v1/verifications` |
 | Body | Request body. The request body should contain a single JSON message object similar to the sample to the right. Specific examples for the `Create` and `Get` requests are included below.
 
-# Create Resource
+# <a name="resource"></a>Create Resource
 
 Creates a resource to be trusonafied.
 
@@ -150,7 +179,7 @@ Creates a resource to be trusonafied.
 
 `POST https://api.trusona.com/api/v1/verifications`
 
-## Request Example
+## <a name="requestBody"></a>Request Example
 
 The full request includes the header, body, and schema. Check out the example on the right.
 
@@ -346,7 +375,7 @@ HTTP Response Code | Message
 403 | Full authentication is required to access this resource.
 422 | Unprocessible entity. This means the server understands the content type of the request entity and the syntax of the request entity is correct, but was unable to process the contained instructions.
 
-# Get Resource
+# <a name="get"></a>Get Resource
 
 Gets the trusonafication ID.
 
